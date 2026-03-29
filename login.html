@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login | Drawing Assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body class="login-page">
+
+<div class="login-card">
+
+  <div class="login-image">
+    <img src="{{ url_for('static', filename='logo.png') }}">
+  </div>
+
+  <h2>SketchDraw</h2>
+
+<form method="POST">
+
+  <div class="input-box">
+    <input type="text" name="username" placeholder="Username" required>
+  </div>
+
+  <div class="input-box">
+    <input type="password" name="password" placeholder="Password" required>
+  </div>
+
+  <button type="submit">Log In</button>
+
+</form>
+
+<div class="links">
+  <a href="/forget">Forgot password?</a>
+  <a href="/register">Create new account</a>
+</div>
+
+</div>
+
+</body>
+</html>

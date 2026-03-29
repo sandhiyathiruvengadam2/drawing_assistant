@@ -1,0 +1,129 @@
+* {
+    box-sizing: border-box;
+}
+
+body.dashboard-page {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+
+    /* OLD SOFT BLUE BACKGROUND */
+    background: linear-gradient(135deg, #e8f0ff, #f7faff);
+
+    color: #333;
+}
+
+/* ===== TOP BAR ===== */
+
+.top-bar {
+    text-align: center;
+    padding: 25px 20px;
+}
+
+.top-bar h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.welcome-text {
+    font-size: 16px;
+    opacity: 0.7;
+}
+
+.top-bar a {
+    display: inline-block;
+    margin-top: 8px;
+    text-decoration: none;
+    color: #4a6cf7;
+    font-weight: 500;
+}
+
+/* ===== DASHBOARD GRID ===== */
+
+.dashboard-grid {
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+
+    gap: 25px;
+
+    padding: 30px;
+
+    max-width: 900px;
+
+    margin: auto;
+}
+
+/* ===== CARDS ===== */
+
+.dashboard-grid a.card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 25px;
+
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+
+    /* IMPORTANT FIX */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 130px;   /* ensures box visible */
+    width: 100%;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    transition: all 0.2s ease;
+}
+
+/* Hover effect */
+.dashboard-grid a.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+/* Icon fix */
+.dashboard-grid a.card i {
+    font-size: 32px;
+    color: #4a6cf7;
+    margin-bottom: 10px;
+}
+
+/* Label text */
+.dashboard-grid a.card .label {
+    font-size: 15px;
+    font-weight: 500;
+}
+/* ===== ICON ===== */
+
+.icon {
+    font-size: 32px;
+
+    color: #4a6cf7;
+
+    margin-bottom: 10px;
+}
+
+/* ===== LABEL ===== */
+
+.label {
+    font-size: 14px;
+
+    font-weight: 500;
+}
+
+/* ===== LOGOUT CARD ===== */
+
+.dashboard-grid a.logout {
+    background: #ffecec;
+}
+
+.dashboard-grid a.logout .icon {
+    color: #c0392b;
+}
+
+.dashboard-grid a.logout .label {
+    color: #c0392b;
+}

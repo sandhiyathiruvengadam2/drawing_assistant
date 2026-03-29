@@ -1,0 +1,225 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f8fafc, #e3edf7);
+    color: #333;
+    text-align: center;
+    font-size: 18px;
+}
+
+h2 {
+    margin-top: 20px;
+    color: #2c3e50;
+}
+
+button, select, input[type="color"], input[type="file"] {
+    padding: 8px 14px;
+    margin: 6px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+button {
+    background-color: #4a6cf7;
+    color: white;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background-color: #364fc7;
+}
+
+select {
+    background-color: white;
+    border: 1px solid #ccc;
+}
+
+canvas {
+    display: block;
+    margin: 20px auto;
+    border-radius: 8px;
+    border: 2px solid #2c3e50;
+    background-color: white;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    cursor: crosshair;
+}
+
+input[type="file"] {
+    background-color: white;
+}
+
+div {
+    margin-top: 10px;
+}
+.canvas-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 15px;
+  max-width: 700px;
+  margin: 15px auto;
+}
+
+.card {
+  background: #f0f4ff;
+  border-radius: 14px;
+  width: 300px;
+  padding: 40px;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.card h3 {
+  font-size: 20px;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  background: #e4ebff;
+}
+
+.card p {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.card span {
+  font-size: 14px;
+  color: #555;
+}
+
+.custom-size {
+  margin-top: 15px;
+}
+
+.custom-size input {
+  width: 90px;
+  padding: 6px;
+}
+
+.custom-size button {
+  padding: 6px 12px;
+  background: #4a6cff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 60px;
+  background: #1e1e2f;
+  color: white;
+
+}
+
+.navbar .logo{
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.navbar ul {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* HERO */
+.hero {
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: white;
+}
+
+.hero h1 {
+  font-size: 4rem;
+}
+
+.hero p {
+  font-size: 1.5rem;
+}
+
+.hero-buttons {
+  margin-top: 20px;
+}
+
+/* BUTTONS */
+.btn, .btn-primary {
+  padding: 16px 35px;
+  font-size: 18px;
+  border-radius: 10px;
+  text-decoration: none;
+  margin: 5px;
+  font-weight: bold;
+}
+
+.btn {
+  background: white;
+  color: #2575fc;
+}
+
+.btn-primary {
+  background: #2575fc;
+  color: white;
+}
+
+/* FEATURES */
+.features {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 50px;
+}
+
+.card {
+  background: #f5f5f5;
+  padding: 30px;
+  border-radius: 12px;
+  width: 250px;
+  text-align: center;
+}
+
+/* FOOTER */
+.footer {
+  background: #1e1e2f;
+  color: white;
+  text-align: center;
+  padding: 15px;
+}
+.login-box {
+  width: 400px;          /* 🔥 increase */
+  padding: 50px;
+  border-radius: 15px;
+}
+
+.login-box h2 {
+  font-size: 26px;
+}
+
+.login-box input {
+  padding: 14px;
+  font-size: 16px;
+}
+
+.login-box button {
+  padding: 14px;
+  font-size: 18px;
+}

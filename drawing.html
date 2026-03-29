@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Drawing Workspace</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='drawing.css') }}" />
+<script defer src="{{ url_for('static', filename='drawing.js') }}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+<div class="app-shell">
+  <header class="top-toolbar">
+    <nav class="top-menu" aria-label="Primary menu">
+      <div class="menu-item"><button class="menu-btn">File <i class="fa-solid fa-caret-down"></i></button>
+        <ul class="dropdown">
+          <li><button id="newCanvasBtn">New Canvas</button></li>
+          <li><button id="openImageBtn">Open Image</button></li>
+          <li><button id="saveBtn">Save</button></li>
+          <li><button id="saveAsBtn">Save As</button></li>
+          <li><hr style="margin: 4px 0;"></li>
+          <li><button id="exportPNGBtn">Export as PNG</button></li>
+          <li><button id="exportJPGBtn">Export as JPG</button></li>
+          <li><button id="exportSVGBtn">Export as SVG</button></li>
+          <li><hr style="margin: 4px 0;"></li>
+          <li><button id="exitBtn">Exit</button></li>
+        </ul>
+      </div>
+      <div class="menu-item"><button class="menu-btn">Edit <i class="fa-solid fa-caret-down"></i></button>
+        <ul class="dropdown">
+          <li><button id="undoMenuBtn">Undo</button></li>
+          <li><button id="redoMenuBtn">Redo</button></li>
+          <li><hr style="margin: 4px 0;"></li>
+          <li><button id="clearCanvasBtn">Clear Canvas</button></li>
+          <li><button id="copyBtn">Copy</button></li>
+          <li><button id="pasteBtn">Paste</button></li>
+        </ul>
+      </div>
+      <div class="menu-item"><button class="menu-btn">View <i class="fa-solid fa-caret-down"></i></button>
+        <ul class="dropdown">
+          <li><button id="zoomInMenuBtn">Zoom In</button></li>
+          <li><button id="zoomOutMenuBtn">Zoom Out</button></li>
+          <li><button id="resetZoomMenuBtn">Reset Zoom</button></li>
+          <li><hr style="margin: 4px 0;"></li>
+          <li><button id="toggleGridMenuBtn">Toggle Grid</button></li>
+          <li><button id="showRulersBtn">Show Rulers</button></li>
+        </ul>
+      </div>
+      <div class="menu-item"><button class="menu-btn">Tools <i class="fa-solid fa-caret-down"></i></button>
+        <ul class="dropdown">
+          <li><button data-tool="brush" class="tool-menu-item">Brush</button></li>
+          <li><button data-tool="eraser" class="tool-menu-item">Eraser</button></li>
+          <li><button data-tool="shapes" class="tool-menu-item">Shapes</button></li>
+          <li><button id="fillToolBtn" class="tool-menu-item">Fill Tool</button></li>
+          <li><button id="eyedropperBtn" class="tool-menu-item">Eyedropper</button></li>
+          <li><button data-tool="select" class="tool-menu-item">Selection Tool</button></li>
+        </ul>
+      </div>
+      <div class="menu-item"><button class="menu-btn">Animation <i class="fa-solid fa-caret-down"></i></button>
+        <ul class="dropdown">
+          <li><button id="addFrameBtn">Add Frame</button></li>
+          <li><button id="deleteFrameBtn">Delete Frame</button></li>
+          <li><hr style="margin: 4px 0;"></li>
+          <li><button id="playAnimationBtn">Play Animation</button></li>
+          <li><button id="stopAnimationBtn">Stop Animation</button></li>
+        </ul>
+      </div>
+      <div class="menu-item"><button class="menu-btn">Science <i class="fa-solid fa-caret-down"></i></button>
+        <ul class="dropdown">
+          <li><button id="colorAnalysisBtn">Color Analysis</button></li>
+          <li><button id="extractColorsBtn">Extract Main Colors</button></li>
+          <li><button id="generatePaletteBtn">Generate Palette</button></li>
+          <li><button id="complementaryBtn">Complementary Colors</button></li>
+        </ul>
+      </div>
+      <div class="menu-item"><button class="menu-btn">Help <i class="fa-solid fa-caret-down"></i></button>
+        <ul class="dropdown">
+          <li><button id="howToUseBtn">How to Use</button></li>
+          <li><button id="shortcutsBtn">Shortcuts</button></li>
+          <li><button id="aboutBtn">About</button></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="top-actions">
+      <button id="undo" class="icon-btn" title="Undo"><i class="fa-solid fa-rotate-left"></i></button>
+      <button id="redo" class="icon-btn" title="Redo"><i class="fa-solid fa-rotate-right"></i></button>
+      <button id="zoomIn" class="icon-btn" title="Zoom In"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+      <button id="zoomOut" class="icon-btn" title="Zoom Out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+      <button id="gridToggle" class="icon-btn active" title="Toggle Grid"><i class="fa-solid fa-border-all"></i></button>
+      <span id="zoomDisplay" class="zoom-display">100%</span>
+      <button id="fitToScreen" class="icon-btn" title="Fit to Screen"><i class="fa-solid fa-expand"></i></button>
+    </div>
+  </header>
+
+  <aside class="left-panel">
+    <div class="tool-icons" role="toolbar">
+      <button data-tool="pencil" title="Pencil"><i class="fa-solid fa-pencil"></i></button>
+      <button data-tool="brush" title="Brush"><i class="fa-solid fa-brush"></i></button>
+      <button data-tool="eraser" title="Eraser"><i class="fa-solid fa-eraser"></i></button>
+      <button data-tool="select" title="Selection"><i class="fa-solid fa-mouse-pointer"></i></button>
+      <button data-tool="shapes" title="Shapes"><i class="fa-solid fa-square-up-right"></i></button>
+      <button data-tool="text" title="Text"><i class="fa-solid fa-font"></i></button>
+      <button data-tool="color" title="Color Picker"><i class="fa-solid fa-droplet"></i></button>
+      <button id="gridOptions" title="Grid Options"><i class="fa-solid fa-border-all"></i></button>
+      <button id="guidelineOptions" title="Guidelines"><i class="fa-solid fa-ruler-combined"></i></button>
+      <button id="collaborationOptions" title="Collaboration"><i class="fa-solid fa-handshake"></i></button>
+      <button id="animationOptions" title="Animation"><i class="fa-solid fa-film"></i></button>
+      <button id="colorScienceOptions" title="Color Science"><i class="fa-solid fa-palette"></i></button>
+      <button id="imageAnalysisOptions" title="Image Colors"><i class="fa-solid fa-image"></i></button>
+      <button id="backgroundSuggestionOptions" title="Background Suggestions"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+      <button id="anatomyOptions" title="Anatomy Reference"><i class="fa-solid fa-person"></i></button>
+      <button id="avatarOptions" title="Avatar Creator"><i class="fa-solid fa-wand-magic"></i></button>
+    </div>
+  </aside>
+
+  <main class="workspace">
+    <div class="canvas-holder">
+      <canvas id="drawCanvas"></canvas>
+      <canvas id="gridCanvas" class="overlay"></canvas>
+    </div>
+  </main>
+
+  <aside class="right-panel">
+    <div class="tool-options" id="toolOptions">
+      <h3>Tool Options</h3>
+      <div id="toolOptionsContent" class="tool-options-content">Click a toolbar icon to view settings</div>
+    </div>
+
+    <!-- Grid Panel (Separate, Collapsible) -->
+    <section class="panel-section grid-panel-section" data-collapse>
+      <header>📏 Grid <button class="toggle">−</button></header>
+      <div class="panel-body grid-panel-body" style="display:none;">
+        <div class="option-row"><label>Grid Type</label>
+          <div style="display:flex; gap:4px; flex-wrap:wrap;">
+            <button class="grid-type-btn preset-btn active" data-grid="square">Square</button>
+            <button class="grid-type-btn preset-btn" data-grid="dot">Dot</button>
+            <button class="grid-type-btn preset-btn" data-grid="isometric">Isometric</button>
+          </div>
+        </div>
+        <div class="option-row"><label>Grid Size (px)</label><input id="gridSizeSlider" type="range" min="20" max="200" value="100" /></div>
+        <div class="option-row"><label>Line Width</label><input id="gridLineWidthSlider" type="range" min="0.5" max="3" step="0.5" value="1" /></div>
+        <div class="option-row"><label>Opacity</label><input id="gridOpacitySlider" type="range" min="0" max="100" value="50" /></div>
+        <div class="option-row"><label>Color</label><input type="color" id="gridColorPicker" value="#808080" /></div>
+        <div class="option-row">
+          <label>Enable Grid</label>
+          <button id="gridEnableCheckbox" class="toggle-button active" data-state="true"><span class="toggle-label">ON</span></button>
+        </div>
+        <div class="option-row">
+          <label>Snap to Grid</label>
+          <button id="gridSnapCheckbox" class="toggle-button" data-state="false"><span class="toggle-label">OFF</span></button>
+        </div>
+        <canvas id="gridPreview" width="200" height="80" style="border:1px solid #ccc;background:#000;width:100%;margin-top:6px;border-radius:4px;"></canvas>
+      </div>
+    </section>
+
+    <!-- Guidelines Panel (Separate, Collapsible) -->
+    <section class="panel-section guidelines-panel-section" data-collapse>
+      <header>📐 Guidelines <button class="toggle">−</button></header>
+      <div class="panel-body guidelines-panel-body" style="display:none;">
+        <div class="option-row"><label>Type</label>
+          <select id="guidelineType">
+            <option value="horizontal">Horizontal</option>
+            <option value="vertical">Vertical</option>
+            <option value="diagonal">Diagonal</option>
+          </select>
+        </div>
+        <div class="option-row"><label>Position (px)</label><input id="guidelinePosition" type="number" min="0" max="1000" value="100" /></div>
+        <div class="option-row"><label>Angle (°)</label><input id="guidelineAngle" type="number" min="0" max="360" value="45" /></div>
+        <button id="addGuidelineBtn" class="preset-btn" style="width:100%;margin-bottom:8px;">+ Add Guideline</button>
+        
+        <div class="option-row"><label>Color</label><input type="color" id="guidelineColorPicker" value="#4fac fe" /></div>
+        <div class="option-row"><label>Opacity</label><input id="guidelineOpacitySlider" type="range" min="0" max="100" value="80" /></div>
+        <div class="option-row">
+          <label>Snap to Guidelines</label>
+          <button id="guidelineSnapCheckbox" class="toggle-button" data-state="false"><span class="toggle-label">OFF</span></button>
+        </div>
+
+        <div class="option-row"><label>Guidelines</label></div>
+        <div id="guidelinesList" style="max-height:100px;overflow-y:auto;border:1px solid #444;padding:4px;border-radius:4px;background:rgba(0,0,0,.2);margin-bottom:6px;font-size:0.7rem;"></div>
+        <button id="clearGuidelinesBtn" class="preset-btn" style="width:100%;">Clear All</button>
+      </div>
+    </section>
+
+    <section class="panel-section layers-panel-section" data-collapse>
+      <header class="layers-header">
+        <span>📑 Layers</span>
+        <div class="layers-header-icons">
+          <button id="addLayerBtn" class="layer-icon-btn" title="Add/Manage"><i class="fa-solid fa-folder-plus"></i></button>
+          <button id="moveLayerBtn" class="layer-icon-btn" title="Move up">−</button>
+        </div>
+      </header>
+      <div class="panel-body layers-panel-body">
+        <div class="layers-top-controls">
+          <div class="opacity-control">
+            <label>Opacity: <span id="opacityValue">100</span>%</label>
+            <input id="layerOpacityInput" type="range" min="0" max="100" value="100" class="opacity-slider" />
+          </div>
+          <select id="layerBlendMode" class="blend-mode-select">
+            <option value="source-over">Normal</option>
+            <option value="multiply">Multiply</option>
+            <option value="screen">Screen</option>
+            <option value="overlay">Overlay</option>
+            <option value="darken">Darken</option>
+            <option value="lighten">Lighten</option>
+            <option value="color-dodge">Color Dodge</option>
+            <option value="color-burn">Color Burn</option>
+            <option value="hard-light">Hard Light</option>
+            <option value="soft-light">Soft Light</option>
+            <option value="difference">Difference</option>
+            <option value="exclusion">Exclusion</option>
+            <option value="hue">Hue</option>
+            <option value="saturation">Saturation</option>
+            <option value="color">Color</option>
+            <option value="luminosity">Luminosity</option>
+          </select>
+        </div>
+        <div id="layerList" class="layers-list"></div>
+      </div>
+    </section>
+    <section class="panel-section collaboration-panel-section" data-collapse>
+      <header>🤝 Collaboration <button class="toggle">−</button></header>
+      <div class="panel-body collaboration-panel-body" style="display:none;">
+        <!-- Active Collaborators -->
+        <div class="collab-section">
+          <div class="section-title">Collaborators</div>
+          <div id="collabList" class="collab-list">
+            <div class="collab-badge" title="You">
+              <div class="avatar" style="background:#4080f0;">Y</div>
+              <span>You</span>
+            </div>
+          </div>
+          <button id="inviteCollabBtn" class="preset-btn" style="width:100%;margin-top:6px;"><i class="fa-solid fa-user-plus"></i> Invite</button>
+        </div>
+
+        <!-- Live Chat -->
+        <div class="collab-section" style="margin-top:12px;">
+          <div class="section-title">💬 Live Chat</div>
+          <div id="chatOutput" class="chat-output" style="height:120px;"></div>
+          <div class="chat-input-group">
+            <input id="chatInput" type="text" placeholder="Type message..." class="chat-msg-input" />
+            <button id="chatSend" class="preset-btn" title="Send"><i class="fa-solid fa-paper-plane"></i></button>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="collab-section" style="margin-top:12px;">
+          <button id="viewHistoryBtn" class="preset-btn" style="width:100%;margin-bottom:6px;"><i class="fa-solid fa-clock"></i> View History</button>
+          <button id="pingAreaBtn" class="preset-btn" style="width:100%;margin-bottom:6px;"><i class="fa-solid fa-location-dot"></i> Ping Area</button>
+          <button id="exportLogBtn" class="preset-btn" style="width:100%;"><i class="fa-solid fa-download"></i> Export Log</button>
+        </div>
+      </div>
+    </section>
+    <section class="panel-section animation-panel-section">
+      <header>🎬 Animation <button class="toggle minus-toggle">−</button></header>
+      <div class="panel-body" style="display:none;">
+        <div class="animation-preview-section">
+          <label style="font-size:0.75rem;color:var(--muted);margin-bottom:6px;display:block;">Preview</label>
+          <canvas id="animationPreview" width="280" height="120" style="width:100%;height:120px;border:1px solid var(--border);border-radius:6px;background:#0a0f1d;margin-bottom:8px;"></canvas>
+        </div>
+        <div class="animation-frames-section">
+          <label style="font-size:0.75rem;color:var(--muted);margin-bottom:6px;display:block;">Frames</label>
+          <div id="frameList" class="frame-list" style="border:1px solid var(--border);border-radius:6px;background:rgba(0,0,0,.2);padding:6px;max-height:140px;overflow:auto;margin-bottom:8px;"></div>
+          <div style="display:flex;gap:4px;margin-bottom:8px;">
+            <button id="addFrameAnimBtn" class="preset-btn" style="flex:1;font-size:0.75rem;padding:6px;"><i class="fa-solid fa-plus"></i> Add</button>
+            <button id="delFrameAnimBtn" class="preset-btn" style="flex:1;font-size:0.75rem;padding:6px;"><i class="fa-solid fa-trash"></i> Delete</button>
+            <button id="dupFrameAnimBtn" class="preset-btn" style="flex:1;font-size:0.75rem;padding:6px;"><i class="fa-solid fa-copy"></i> Dup</button>
+          </div>
+        </div>
+        <div class="animation-controls-section">
+          <div style="margin-bottom:8px;">
+            <label style="font-size:0.73rem;color:var(--muted);margin-bottom:4px;display:block;">Playback</label>
+            <div style="display:flex;gap:4px;">
+              <button id="playAnimBtn" class="preset-btn" style="flex:1;padding:6px;"><i class="fa-solid fa-play"></i></button>
+              <button id="pauseAnimBtn" class="preset-btn" style="flex:1;padding:6px;"><i class="fa-solid fa-pause"></i></button>
+              <button id="loopAnimBtn" class="preset-btn" style="flex:1;padding:6px;"><i class="fa-solid fa-repeat"></i></button>
+            </div>
+          </div>
+          <div class="option-row">
+            <label>FPS:</label>
+            <input id="fpsSlider" type="range" min="6" max="60" value="24" style="width:100%;">
+            <span id="fpsValue" style="font-size:0.75rem;color:var(--muted);margin-left:4px;">24</span>
+          </div>
+          <div class="option-row">
+            <label>Duration (sec):</label>
+            <input id="durationInput" type="number" min="0.5" max="30" value="2" step="0.5" style="width:100%;">
+          </div>
+          <div class="option-row" style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+            <label style="margin-bottom:0;">Onion Skin:</label>
+            <div class="toggle-button" id="onionSkinToggle" style="width:50px;height:28px;position:relative;background:#505050;border-radius:999px;cursor:pointer;transition:all 0.3s ease;display:flex;align-items:center;margin:0;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Color Science Modal Dialog -->
+    <div id="colorScienceModal" class="color-science-modal" style="display:none;">
+      <div class="color-science-dialog">
+        <div class="color-science-header">
+          <h2>Color Science</h2>
+          <button class="color-science-close" id="colorScienceCloseBtn">&times;</button>
+        </div>
+        
+        <div class="color-science-content">
+          <!-- Left Column: Mediums & Color Wheel -->
+          <div class="cs-left-column">
+            <!-- Medium-Specific Swatches -->
+            <div class="cs-medium-section">
+              <h3>Watercolor</h3>
+              <div class="cs-swatch-row">
+                <div class="cs-swatch" style="background:#E8D4C0;"></div>
+                <div class="cs-swatch" style="background:#D4A5A5;"></div>
+                <div class="cs-swatch" style="background:#B8A5D1;"></div>
+                <div class="cs-swatch" style="background:#A5D1D4;"></div>
+              </div>
+            </div>
+            
+            <div class="cs-medium-section">
+              <h3>Paint</h3>
+              <div class="cs-swatch-row">
+                <div class="cs-swatch" style="background:#FF6B6B;"></div>
+                <div class="cs-swatch" style="background:#4ECDC4;"></div>
+                <div class="cs-swatch" style="background:#FFE66D;"></div>
+                <div class="cs-swatch" style="background:#95E1D3;"></div>
+              </div>
+            </div>
+            
+            <div class="cs-medium-section">
+              <h3>Crayon</h3>
+              <div class="cs-swatch-row">
+                <div class="cs-swatch" style="background:#FF9999;"></div>
+                <div class="cs-swatch" style="background:#FF99CC;"></div>
+                <div class="cs-swatch" style="background:#CC99FF;"></div>
+                <div class="cs-swatch" style="background:#9999FF;"></div>
+              </div>
+            </div>
+            
+            <div class="cs-medium-section">
+              <h3>Colored Pencil</h3>
+              <div class="cs-swatch-row">
+                <div class="cs-swatch" style="background:#C84C4C;"></div>
+                <div class="cs-swatch" style="background:#FF8C42;"></div>
+                <div class="cs-swatch" style="background:#FFD93D;"></div>
+                <div class="cs-swatch" style="background:#6BCB77;"></div>
+              </div>
+            </div>
+            
+            <!-- Color Wheel -->
+            <div class="cs-color-wheel-section">
+              <h3>Color Wheel</h3>
+              <canvas id="colorWheelCanvas" width="160" height="160" class="cs-color-wheel"></canvas>
+              <div class="cs-wheel-labels">
+                <div class="cs-warm">Warm</div>
+                <div class="cs-cool">Cool</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Middle Column: Harmonies -->
+          <div class="cs-middle-column">
+            <h3>Harmonies</h3>
+            
+            <div class="cs-harmony-type">
+              <label>Monochromatic</label>
+              <div id="monochromaticHarmony" class="cs-harmony-swatches">
+                <div class="cs-harmony-swatch" style="background:#FF6B6B;"></div>
+                <div class="cs-harmony-swatch" style="background:#CC5555;"></div>
+                <div class="cs-harmony-swatch" style="background:#993F3F;"></div>
+              </div>
+            </div>
+            
+            <div class="cs-harmony-type">
+              <label>Analogous</label>
+              <div id="analogousHarmony" class="cs-harmony-swatches">
+                <div class="cs-harmony-swatch" style="background:#FF6B6B;"></div>
+                <div class="cs-harmony-swatch" style="background:#FFB366;"></div>
+                <div class="cs-harmony-swatch" style="background:#FFFF66;"></div>
+              </div>
+            </div>
+            
+            <div class="cs-harmony-type">
+              <label>Complementary</label>
+              <div id="complementaryHarmony" class="cs-harmony-swatches">
+                <div class="cs-harmony-swatch" style="background:#FF6B6B;"></div>
+                <div class="cs-harmony-swatch" style="background:#6BFFFF;"></div>
+              </div>
+            </div>
+            
+            <div class="cs-harmony-type">
+              <label>Split Complementary</label>
+              <div id="splitComplementaryHarmony" class="cs-harmony-swatches">
+                <div class="cs-harmony-swatch" style="background:#FF6B6B;"></div>
+                <div class="cs-harmony-swatch" style="background:#6BCCFF;"></div>
+                <div class="cs-harmony-swatch" style="background:#B36BFF;"></div>
+              </div>
+            </div>
+            
+            <div class="cs-harmony-type">
+              <label>Triadic</label>
+              <div id="triadicHarmony" class="cs-harmony-swatches">
+                <div class="cs-harmony-swatch" style="background:#FF6B6B;"></div>
+                <div class="cs-harmony-swatch" style="background:#6BFF6B;"></div>
+                <div class="cs-harmony-swatch" style="background:#6B6BFF;"></div>
+              </div>
+            </div>
+            
+            <div class="cs-harmony-type">
+              <label>Tetradic</label>
+              <div id="tetradicHarmony" class="cs-harmony-swatches">
+                <div class="cs-harmony-swatch" style="background:#FF6B6B;"></div>
+                <div class="cs-harmony-swatch" style="background:#FFD66B;"></div>
+                <div class="cs-harmony-swatch" style="background:#6BFFB3;"></div>
+                <div class="cs-harmony-swatch" style="background:#6B9BFF;"></div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right Column: Properties & Accessibility -->
+          <div class="cs-right-column">
+            <!-- Color Properties -->
+            <div class="cs-properties-section">
+              <h3>Color Properties</h3>
+              
+              <div class="cs-property">
+                <h4>Hue</h4>
+                <p class="cs-property-desc">The pure color as we perceive it (red, blue, green, etc.)</p>
+                <div class="cs-property-examples">
+                  <div class="cs-prop-example" style="background:#FF0000;" title="Red"></div>
+                  <div class="cs-prop-example" style="background:#00FF00;" title="Green"></div>
+                  <div class="cs-prop-example" style="background:#0000FF;" title="Blue"></div>
+                </div>
+              </div>
+              
+              <div class="cs-property">
+                <h4>Intensity (Saturation)</h4>
+                <p class="cs-property-desc">The strength/purity of the hue (vibrant vs gray)</p>
+                <div class="cs-property-examples">
+                  <div class="cs-prop-example" style="background:#808080;" title="Low"></div>
+                  <div class="cs-prop-example" style="background:#CC3333;" title="Medium"></div>
+                  <div class="cs-prop-example" style="background:#FF0000;" title="High"></div>
+                </div>
+              </div>
+              
+              <div class="cs-property">
+                <h4>Value (Lightness)</h4>
+                <p class="cs-property-desc">The brightness of the color (dark to light)</p>
+                <div class="cs-property-examples">
+                  <div class="cs-prop-example" style="background:#1A1A1A;" title="Shade"></div>
+                  <div class="cs-prop-example" style="background:#FF6B6B;" title="Tone"></div>
+                  <div class="cs-prop-example" style="background:#FFB3B3;" title="Tint"></div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Accessibility Section -->
+            <div class="cs-accessibility-section">
+              <h3>Accessibility</h3>
+              
+              <div class="cs-contrast-checker">
+                <h4>WCAG Contrast</h4>
+                <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
+                  <div id="csContrastColor1" class="cs-contrast-swatch" style="background:#FFFFFF;"></div>
+                  <div style="flex:1;">
+                    <div id="csContrastRatio" style="font-weight:bold;font-size:0.9rem;">21:1</div>
+                    <div id="csContrastStatus" style="font-size:0.75rem;color:#2ecc71;">AAA Pass</div>
+                  </div>
+                  <div id="csContrastColor2" class="cs-contrast-swatch" style="background:#000000;"></div>
+                </div>
+              </div>
+              
+              <div class="cs-safe-colors">
+                <h4>Safe Colors</h4>
+                <p style="font-size:0.75rem;color:var(--muted);margin:6px 0;">Web-safe palette for all browsers</p>
+                <div class="cs-safe-palette">
+                  <div class="cs-safe-color" style="background:#000000;"></div>
+                  <div class="cs-safe-color" style="background:#333333;"></div>
+                  <div class="cs-safe-color" style="background:#666666;"></div>
+                  <div class="cs-safe-color" style="background:#999999;"></div>
+                  <div class="cs-safe-color" style="background:#CCCCCC;"></div>
+                  <div class="cs-safe-color" style="background:#FFFFFF;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="color-science-footer">
+          <button id="colorScienceGuideBtn" class="cs-action-btn cs-guide-btn"><i class="fa-solid fa-book"></i> Guide</button>
+          <button id="colorScienceSafeColorsBtn" class="cs-action-btn cs-safe-btn"><i class="fa-solid fa-shield"></i> Safe Colors</button>
+          <button id="colorScienceAccessibilityBtn" class="cs-action-btn cs-a11y-btn"><i class="fa-solid fa-eye"></i> Accessibility</button>
+          <div style="flex:1;"></div>
+          <button id="colorScienceCancelBtn" class="cs-action-btn cs-cancel-btn">Cancel</button>
+          <button id="colorScienceOkBtn" class="cs-action-btn cs-ok-btn">OK</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Canvas Size Modal Dialog -->
+    <div id="canvasSizeModal" class="canvas-size-modal" style="display:none;">
+      <div class="canvas-size-dialog">
+        <div class="canvas-size-header">
+          <h2>📐 Canvas Size</h2>
+          <button class="canvas-size-close" id="canvasSizeCloseBtn">&times;</button>
+        </div>
+        
+        <div class="canvas-size-content">
+          <h3>Preset Sizes</h3>
+          <div class="canvas-presets">
+            <button class="canvas-preset-btn" data-width="400" data-height="300"><span class="preset-label">Small</span><span class="preset-size">400×300</span></button>
+            <button class="canvas-preset-btn" data-width="600" data-height="400"><span class="preset-label">Medium</span><span class="preset-size">600×400</span></button>
+            <button class="canvas-preset-btn" data-width="800" data-height="600"><span class="preset-label">Large</span><span class="preset-size">800×600</span></button>
+            <button class="canvas-preset-btn" data-width="1024" data-height="768"><span class="preset-label">Extra Large</span><span class="preset-size">1024×768</span></button>
+            <button class="canvas-preset-btn" data-width="1280" data-height="720"><span class="preset-label">HD</span><span class="preset-size">1280×720</span></button>
+            <button class="canvas-preset-btn" data-width="1920" data-height="1080"><span class="preset-label">Full HD</span><span class="preset-size">1920×1080</span></button>
+          </div>
+          
+          <hr style="margin:16px 0; border:none; border-top:1px solid var(--border);">
+          
+          <h3>Custom Size</h3>
+          <div class="custom-size-inputs">
+            <div class="input-group">
+              <label>Width (px)</label>
+              <input type="number" id="customWidth" value="800" min="100" max="2000">
+            </div>
+            <div class="input-group">
+              <label>Height (px)</label>
+              <input type="number" id="customHeight" value="600" min="100" max="2000">
+            </div>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <button id="lockAspectBtn" class="toggle-button active" data-state="true" style="flex:1;">
+                <span class="toggle-label">Link</span>
+              </button>
+              <button id="swapDimensionsBtn" class="toggle-button" style="flex:1;">
+                <i class="fa-solid fa-arrow-right-arrow-left"></i> Swap
+              </button>
+            </div>
+          </div>
+          
+          <div class="canvas-info">
+            <p id="canvasPreview" style="font-size:0.85rem; color:var(--muted);">Current: 800 × 600</p>
+          </div>
+        </div>
+        
+        <div class="canvas-size-footer">
+          <button id="canvasSizeCancelBtn" class="cs-action-btn cs-cancel-btn">Cancel</button>
+          <button id="canvasSizeApplyBtn" class="cs-action-btn cs-ok-btn">Apply</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Simple Color Science Panel (for sidebar) -->
+    <section class="panel-section color-science-panel-section">
+      <header>🌟 Color Science <button class="toggle minus-toggle">−</button></header>
+      <div class="panel-body" style="display:none;">
+        <div style="padding:8px;text-align:center;">
+          <button id="openColorScienceModalBtn" class="preset-btn" style="width:100%;padding:8px;font-weight:bold;">
+            <i class="fa-solid fa-palette"></i> Open Color Science
+          </button>
+        </div>
+        
+        <!-- Quick Color Model Controls -->
+        <div style="margin-bottom:8px;font-size:0.72rem;">
+          <label style="display:block;color:var(--muted);margin-bottom:4px;font-weight:600;">Quick Color</label>
+          <div style="display:flex;gap:4px;margin-bottom:6px;">
+            <input id="quickHexInput" type="text" value="#FF0000" style="flex:1;padding:4px;border:1px solid var(--border);border-radius:4px;background:var(--panel);color:#fff;text-transform:uppercase;" placeholder="Hex color">
+          </div>
+          <div id="quickColorPreview" style="width:100%;height:30px;border:2px solid var(--border);border-radius:6px;background:#FF0000;"></div>
+        </div>
+        
+        <!-- Harmony Quick Buttons -->
+        <div style="font-size:0.72rem;">
+          <label style="display:block;color:var(--muted);margin-bottom:4px;font-weight:600;">Quick Harmonies</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+            <button id="quickComplementaryBtn" class="preset-btn" style="font-size:0.68rem;padding:4px;">Comp</button>
+            <button id="quickAnalogousBtn" class="preset-btn" style="font-size:0.68rem;padding:4px;">Analog</button>
+            <button id="quickTriadicBtn" class="preset-btn" style="font-size:0.68rem;padding:4px;">Triadic</button>
+            <button id="quickTetradicBtn" class="preset-btn" style="font-size:0.68rem;padding:4px;">Tetra</button>
+          </div>
+          <div id="quickHarmonyPalette" style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Image-Based Color Analysis Panel -->
+    <section class="panel-section image-analysis-panel-section">
+      <header>🖼️ Image Colors <button class="toggle minus-toggle">−</button></header>
+      <div class="panel-body" style="display:none;">
+        
+        <!-- Image Import -->
+        <div class="img-import-section">
+          <div id="dragDropZone" class="drag-drop-zone">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <p>Drag image here or</p>
+            <input type="file" id="imageFileInput" accept="image/*" style="display:none;">
+            <button id="browseImageBtn" class="preset-btn" style="font-size:0.75rem;padding:4px 8px;">Browse</button>
+          </div>
+          <div id="importedImagePreview" style="display:none;width:100%;height:100px;border:1px solid var(--border);border-radius:6px;background:rgba(0,0,0,.3);margin-top:8px;overflow:hidden;">
+            <img id="previewImg" style="width:100%;height:100%;object-fit:contain;">
+          </div>
+        </div>
+
+        <!-- Extracted Colors Grid -->
+        <div class="img-colors-section" style="margin-top:8px;">
+          <label style="font-size:0.72rem;color:var(--muted);margin-bottom:4px;display:block;font-weight:600;">Dominant Colors</label>
+          <div id="dominantColorsGrid" class="colors-grid">
+            <div style="text-align:center;color:var(--muted);font-size:0.7rem;padding:20px;">Import an image to analyze</div>
+          </div>
+        </div>
+
+        <!-- Mood Analysis -->
+        <div class="img-mood-section" style="margin-top:8px;padding:8px;background:rgba(255,255,255,.05);border-radius:6px;display:none;">
+          <label style="font-size:0.72rem;color:var(--accent);display:block;font-weight:600;margin-bottom:4px;">Mood</label>
+          <div id="moodLabel" style="font-size:0.75rem;color:var(--text);margin-bottom:6px;"></div>
+          <div id="moodTags" style="display:flex;gap:4px;flex-wrap:wrap;"></div>
+        </div>
+
+        <!-- Harmony Suggestions -->
+        <div class="img-harmony-section" style="margin-top:8px;display:none;">
+          <label style="font-size:0.72rem;color:var(--muted);margin-bottom:4px;display:block;font-weight:600;">Harmony Suggestions</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px;">
+            <button id="imgMono" class="preset-btn" style="font-size:0.68rem;padding:4px;">Mono</button>
+            <button id="imgAnalog" class="preset-btn" style="font-size:0.68rem;padding:4px;">Analog</button>
+            <button id="imgComp" class="preset-btn" style="font-size:0.68rem;padding:4px;">Comp</button>
+            <button id="imgTriad" class="preset-btn" style="font-size:0.68rem;padding:4px;">Triad</button>
+          </div>
+          <div id="harmonyPaletteGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div>
+        </div>
+
+        <!-- Medium Simulation -->
+        <div class="img-medium-section" style="margin-top:8px;display:none;">
+          <label style="font-size:0.72rem;color:var(--muted);margin-bottom:4px;display:block;font-weight:600;">Medium Preview</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+            <button id="medWatercolor" class="preset-btn" style="font-size:0.65rem;padding:4px;">Watercolor</button>
+            <button id="medCrayon" class="preset-btn" style="font-size:0.65rem;padding:4px;">Crayon</button>
+            <button id="medPencil" class="preset-btn" style="font-size:0.65rem;padding:4px;">Pencil</button>
+            <button id="medPaint" class="preset-btn" style="font-size:0.65rem;padding:4px;">Paint</button>
+          </div>
+          <canvas id="mediumPreviewCanvas" width="240" height="80" style="width:100%;border:1px solid var(--border);border-radius:6px;background:rgba(0,0,0,.2);margin-top:6px;"></canvas>
+        </div>
+
+        <!-- Contrast Checker -->
+        <div class="img-contrast-section" style="margin-top:8px;padding:8px;background:rgba(255,255,255,.05);border-radius:6px;display:none;">
+          <label style="font-size:0.72rem;color:var(--accent);display:block;font-weight:600;margin-bottom:4px;">✓ Contrast Check</label>
+          <div id="contrastResults" style="font-size:0.7rem;color:var(--muted);"></div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px;">
+          <button id="applyPaletteBtn" class="preset-btn" style="font-size:0.7rem;background:rgba(46,204,113,.2);border-color:rgba(46,204,113,.4);" title="Apply selected colors">Apply</button>
+          <button id="exportPaletteBtn" class="preset-btn" style="font-size:0.7rem;background:rgba(52,152,219,.2);border-color:rgba(52,152,219,.4);" title="Export palette">Export</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Background Suggestion Panel -->
+    <section class="panel-section background-suggestion-panel-section">
+      <header>🎨 Background Suggestion <button class="toggle minus-toggle">−</button></header>
+      <div class="panel-body" style="display:none;">
+        
+        <!-- Analysis Source -->
+        <div class="bg-source-section">
+          <label style="font-size:0.72rem;color:var(--muted);display:block;font-weight:600;margin-bottom:4px;">Analysis Source</label>
+          <select id="bgAnalysisSource" style="width:100%;padding:6px;border:1px solid var(--border);border-radius:4px;background:var(--panel);color:#fff;font-size:0.7rem;">
+            <option value="imported">From Imported Image</option>
+            <option value="canvas">From Canvas</option>
+          </select>
+          <button id="bgImportImageBtn" class="preset-btn" style="width:100%;margin-top:4px;font-size:0.68rem;padding:4px;">Import Image</button>
+        </div>
+
+        <!-- Mood Summary -->
+        <div class="bg-mood-section" style="margin-top:8px;padding:8px;background:rgba(255,255,255,.05);border-radius:6px;display:none;">
+          <label style="font-size:0.72rem;color:var(--accent);display:block;font-weight:600;margin-bottom:4px;">📊 Detected Mood</label>
+          <div id="bgMoodTitle" style="font-size:0.8rem;font-weight:bold;color:var(--text);margin-bottom:4px;">Analyzing mood...</div>
+          <div id="bgMoodDescription" style="font-size:0.65rem;color:var(--muted);line-height:1.3;margin-bottom:6px;"></div>
+          <div id="bgMoodTags" style="display:flex;gap:4px;flex-wrap:wrap;"></div>
+        </div>
+
+        <!-- Background Suggestions Carousel -->
+        <div class="bg-suggestions-section" style="margin-top:8px;display:none;">
+          <label style="font-size:0.72rem;color:var(--muted);display:block;font-weight:600;margin-bottom:6px;">Style Suggestions</label>
+          <div class="bg-carousel-container">
+            <button id="bgCarouselPrev" class="carousel-nav carousel-prev" title="Previous"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="bg-carousel-view">
+              <div id="bgSuggestionsCarousel" class="bg-suggestions-carousel"></div>
+            </div>
+            <button id="bgCarouselNext" class="carousel-nav carousel-next" title="Next"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Background Preview -->
+        <div class="bg-preview-section" style="margin-top:8px;">
+          <label style="font-size:0.72rem;color:var(--muted);display:block;font-weight:600;margin-bottom:4px;">Preview</label>
+          <canvas id="bgPreviewCanvas" width="240" height="120" style="width:100%;border:1px solid var(--border);border-radius:6px;background:rgba(0,0,0,.3);display:block;"></canvas>
+        </div>
+
+        <!-- Customization Options -->
+        <div class="bg-customize-section" style="margin-top:8px;padding:8px;background:rgba(255,255,255,.05);border-radius:6px;">
+          <label style="font-size:0.72rem;color:var(--accent);display:block;font-weight:600;margin-bottom:6px;">⚙️ Customize</label>
+          
+          <div style="margin-bottom:6px;">
+            <label style="font-size:0.65rem;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:3px;">
+              Opacity
+              <span id="bgOpacityValue" style="color:var(--text);">80%</span>
+            </label>
+            <input id="bgOpacitySlider" type="range" min="0" max="100" value="80" style="width:100%;margin-bottom:4px;">
+          </div>
+
+          <div style="margin-bottom:6px;">
+            <label style="font-size:0.65rem;color:var(--muted);display:block;margin-bottom:3px;">Scale</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+              <button id="bgScaleOriginal" class="preset-btn active" style="font-size:0.65rem;padding:4px;">100%</button>
+              <button id="bgScaleFill" class="preset-btn" style="font-size:0.65rem;padding:4px;">Fill</button>
+            </div>
+          </div>
+
+          <div>
+            <label style="font-size:0.65rem;color:var(--muted);display:block;margin-bottom:3px;">Texture</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+              <button id="bgTextureNone" class="preset-btn active" style="font-size:0.65rem;padding:4px;">None</button>
+              <button id="bgTextureGrain" class="preset-btn" style="font-size:0.65rem;padding:4px;">Grain</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Harmony & Layer Info -->
+        <div class="bg-harmony-section" style="margin-top:8px;padding:8px;background:rgba(255,255,255,.05);border-radius:6px;display:none;">
+          <label style="font-size:0.72rem;color:var(--accent);display:block;font-weight:600;margin-bottom:4px;">🎭 Harmony Check</label>
+          <div id="bgHarmonyInfo" style="font-size:0.65rem;color:var(--muted);line-height:1.4;"></div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px;">
+          <button id="bgSavePresetBtn" class="preset-btn" style="font-size:0.7rem;background:rgba(155,89,182,.2);border-color:rgba(155,89,182,.4);" title="Save as preset"><i class="fa-solid fa-bookmark"></i> Preset</button>
+          <button id="bgApplyBtn" class="preset-btn" style="font-size:0.7rem;background:rgba(46,204,113,.2);border-color:rgba(46,204,113,.4);" title="Apply to canvas"><i class="fa-solid fa-check"></i> Apply</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Anatomy Panel -->
+    <section class="panel-section anatomy-panel-section">
+      <header>👤 Anatomy Reference <button class="toggle minus-toggle">−</button></header>
+      <div class="panel-body" style="display:none;">
+        
+        <!-- Body Part Selection -->
+        <label style="font-size:0.72rem;color:var(--muted);display:block;font-weight:600;margin-bottom:6px;">Body Part</label>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:12px;">
+          <button id="bodyPartHands" class="preset-btn anatomy-part-btn" data-part="hands" title="Hands"><i class="fa-solid fa-hand"></i></button>
+          <button id="bodyPartFace" class="preset-btn anatomy-part-btn" data-part="face" title="Face"><i class="fa-solid fa-head-side-virus"></i></button>
+          <button id="bodyPartTorso" class="preset-btn anatomy-part-btn" data-part="torso" title="Torso"><i class="fa-solid fa-person"></i></button>
+          <button id="bodyPartLegs" class="preset-btn anatomy-part-btn" data-part="legs" title="Legs"><i class="fa-solid fa-person"></i></button>
+          <button id="bodyPartFeet" class="preset-btn anatomy-part-btn" data-part="feet" title="Feet"><i class="fa-solid fa-person"></i></button>
+          <button id="bodyPartFull" class="preset-btn anatomy-part-btn active" data-part="full" title="Full Body"><i class="fa-solid fa-person-hiking"></i></button>
+        </div>
+
+        <!-- View Mode -->
+        <label style="font-size:0.72rem;color:var(--muted);display:block;font-weight:600;margin-bottom:6px;">View Mode</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:12px;">
+          <button id="viewGesture" class="preset-btn anatomy-view-btn active" data-view="gesture" title="Gesture">Gesture</button>
+          <button id="viewSkeleton" class="preset-btn anatomy-view-btn" data-view="skeleton" title="Skeleton">Skeleton</button>
+          <button id="viewMuscle" class="preset-btn anatomy-view-btn" data-view="muscle" title="Muscle">Muscle</button>
+          <button id="viewSkin" class="preset-btn anatomy-view-btn" data-view="skin" title="Skin">Skin</button>
+        </div>
+
+        <!-- Gesture Timer -->
+        <label style="font-size:0.72rem;color:var(--muted);display:block;font-weight:600;margin-bottom:6px;">⏱️ Timer</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:6px;">
+          <button id="timerDuration30" class="preset-btn" data-duration="30" style="font-size:0.65rem;padding:4px;">30s</button>
+          <button id="timerDuration60" class="preset-btn active" data-duration="60" style="font-size:0.65rem;padding:4px;">1m</button>
+          <button id="timerDuration300" class="preset-btn" data-duration="300" style="font-size:0.65rem;padding:4px;">5m</button>
+        </div>
+        <button id="startGestureTimer" class="preset-btn" style="width:100%;padding:6px;margin-bottom:6px;font-weight:bold;background:rgba(52,152,219,.2);border-color:rgba(52,152,219,.4);">Start Timer</button>
+        <div id="timerDisplay" style="text-align:center;font-size:1rem;font-weight:bold;color:var(--accent);margin-bottom:6px;display:none;">1:00</div>
+
+        <!-- Apply Guides Button -->
+        <button id="anatomyApplyBtn" class="preset-btn" style="width:100%;padding:8px;font-weight:bold;background:rgba(46,204,113,.2);border-color:rgba(46,204,113,.4);"><i class="fa-solid fa-check"></i> Apply Guides</button>
+
+      </div>
+    </section>
+
+    <!-- Anatomy Reference Modal -->
+    <div id="anatomyRefModal">
+      <div class="anatomy-ref-modal-content">
+        <div class="anatomy-ref-modal-header">
+          <h2 id="anatomyRefTitle">Anatomy Reference</h2>
+          <button class="anatomy-ref-close" id="closeAnatomyRefBtn">&times;</button>
+        </div>
+        <div class="anatomy-ref-modal-image">
+          <img id="anatomyRefImage" src="" alt="Anatomy Reference" style="max-height:500px;">
+        </div>
+        <div class="anatomy-ref-modal-info" id="anatomyRefInfo">
+          Select a reference to view details
+        </div>
+        <div class="anatomy-ref-modal-controls">
+          <button id="refModalPrevBtn"><i class="fa-solid fa-chevron-left"></i> Previous</button>
+          <button id="refModalNextBtn">Next <i class="fa-solid fa-chevron-right"></i></button>
+          <button id="refModalDownloadBtn"><i class="fa-solid fa-download"></i> Save Image</button>
+          <button id="refModalCloseBtn">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Avatar Panel -->
+    <section class="panel-section avatar-panel-section">
+      <header>🎨 Avatar Creator <button class="toggle minus-toggle">−</button></header>
+      <div class="panel-body" style="display:none;">
+        
+        <!-- Base Avatar Selection -->
+        <label style="font-size:0.72rem;color:var(--muted);display:block;font-weight:600;margin-bottom:6px;">Base Model</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:12px;">
+          <button id="baseModelMale" class="preset-btn avatar-base-btn" data-model="male" title="Male">Male</button>
+          <button id="baseModelFemale" class="preset-btn avatar-base-btn" data-model="female" title="Female">Female</button>
+          <button id="baseModelNeutral" class="preset-btn avatar-base-btn active" data-model="neutral" title="Neutral">Neutral</button>
+          <button id="baseModelFantasy" class="preset-btn avatar-base-btn" data-model="fantasy" title="Fantasy">Fantasy</button>
+        </div>
+        
+        <!-- Pose Selection -->
+        <label style="font-size:0.72rem;color:var(--muted);display:block;font-weight:600;margin-bottom:6px;">Pose</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:12px;">
+          <button id="poseStanding" class="preset-btn avatar-pose-btn active" data-pose="standing">Standing</button>
+          <button id="poseSitting" class="preset-btn avatar-pose-btn" data-pose="sitting">Sitting</button>
+          <button id="poseAction" class="preset-btn avatar-pose-btn" data-pose="action">Action</button>
+          <button id="poseDynamic" class="preset-btn avatar-pose-btn" data-pose="dynamic">Dynamic</button>
+        </div>
+
+        <!-- Expression Selection -->
+        <label style="font-size:0.72rem;color:var(--muted);display:block;font-weight:600;margin-bottom:6px;">Expression</label>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:12px;">
+          <button id="exprSmile" class="preset-btn avatar-expr-btn active" data-expr="smile" title="Happy"><i class="fa-solid fa-face-smile"></i></button>
+          <button id="exprNeutral" class="preset-btn avatar-expr-btn" data-expr="neutral" title="Neutral"><i class="fa-solid fa-face-meh"></i></button>
+          <button id="exprSurprised" class="preset-btn avatar-expr-btn" data-expr="surprised" title="Surprised"><i class="fa-solid fa-face-surprise"></i></button>
+          <button id="exprAngry" class="preset-btn avatar-expr-btn" data-expr="angry" title="Angry"><i class="fa-solid fa-face-angry"></i></button>
+          <button id="exprSad" class="preset-btn avatar-expr-btn" data-expr="sad" title="Sad"><i class="fa-solid fa-face-sad-tear"></i></button>
+          <button id="exprCool" class="preset-btn avatar-expr-btn" data-expr="cool" title="Cool"><i class="fa-solid fa-face-smile-wink"></i></button>
+        </div>
+
+        <!-- Quick Randomize -->
+        <button id="avatarRandomize" class="preset-btn" style="width:100%;margin-bottom:12px;font-weight:bold;padding:8px;background:rgba(155,89,182,.2);border-color:rgba(155,89,182,.4);"><i class="fa-solid fa-dice"></i> Randomize</button>
+
+        <!-- Action Buttons -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+          <button id="avatarSavePreset" class="preset-btn" style="font-size:0.7rem;background:rgba(155,89,182,.2);border-color:rgba(155,89,182,.4);"><i class="fa-solid fa-bookmark"></i> Save</button>
+          <button id="avatarExport" class="preset-btn" style="font-size:0.7rem;background:rgba(52,152,219,.2);border-color:rgba(52,152,219,.4);"><i class="fa-solid fa-download"></i> Export</button>
+        </div>
+        <button id="avatarApply" class="preset-btn" style="width:100%;margin-top:4px;font-size:0.7rem;background:rgba(46,204,113,.2);border-color:rgba(46,204,113,.4);" title="Apply avatar to canvas"><i class="fa-solid fa-check"></i> Apply</button>
+
+      </div>
+    </section>
+
+  </aside>
+
+  <footer class="status-bar">
+    <span id="activeTool">Tool: Pencil</span>
+    <span id="brushSizeStatus">Size: 3</span>
+    <span id="activeLayer">Layer: 1</span>
+    <span id="zoomLevel">Zoom: 100%</span>
+  </footer>
+</div>
+</body>
+</html>

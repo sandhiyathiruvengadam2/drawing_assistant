@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | Drawing Assistant</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Dashboard CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body class="dashboard-page">
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <h1>All-In-One Drawing Assistant</h1>
+        <p class="welcome-text">Welcome, {{ username }}</p>
+        <a href="/logout" class="logout-link">Logout</a>
+    </div>
+
+    <!-- Dashboard Grid -->
+    <div class="dashboard-grid">
+
+        <a href="/new-canvas" class="card">
+            <i class="fa-solid fa-square-plus icon"></i>
+            <span>New Canvas</span>
+        </a>
+
+        <a href="/draw?tool=brush" class="card">
+            <i class="fa-solid fa-pencil icon"></i>
+            <span>Freehand Drawing</span>
+        </a>
+
+        <a href="/draw?tool=shape" class="card">
+            <i class="fa-solid fa-shapes icon"></i>
+            <span>Shape Tools</span>
+        </a>
+
+        <a href="/draw?tool=brush" class="card">
+            <i class="fa-solid fa-paintbrush icon"></i>
+            <span>Brush Tools</span>
+        </a>
+
+        <a href="/draw?tool=color" class="card">
+            <i class="fa-solid fa-palette icon"></i>
+            <span>Color Picker</span>
+        </a>
+
+        <a href="/draw?tool=fill" class="card">
+            <i class="fa-solid fa-fill-drip icon"></i>
+            <span>Fill Tool</span>
+        </a>
+
+        <a href="#" class="card">
+            <i class="fa-solid fa-robot icon"></i>
+            <span>AI Sketch Assistant</span>
+        </a>
+
+        <a href="#" class="card">
+            <i class="fa-solid fa-wand-magic-sparkles icon"></i>
+            <span>Auto Coloring</span>
+        </a>
+
+        <a href="/draw?tool=layers" class="card">
+            <i class="fa-solid fa-layer-group icon"></i>
+            <span>Layers</span>
+        </a>
+
+        <a href="#" class="card" onclick="document.getElementById('dashboardImageLoader').click(); return false;">
+            <i class="fa-solid fa-image icon"></i>
+            <span>Image Import</span>
+        </a>
+
+<input type="file"
+       id="dashboardImageLoader"
+       accept="image/*"
+       style="display:none">
+
+        <a href="/draw?tool=text" class="card">
+            <i class="fa-solid fa-font icon"></i>
+            <span>Text Tool</span>
+        </a>
+
+        <a href="/draw?tool=grid&grid=true" class="card">
+            <i class="fa-solid fa-border-all icon"></i>
+            <span>Grid & Guidelines</span>
+        </a>
+
+        <a href="/draw?tool=save" class="card">
+            <i class="fa-solid fa-download icon"></i>
+            <span>Save / Export</span>
+        </a>
+
+        <a href="#" class="card">
+            <i class="fa-solid fa-gear icon"></i>
+            <span>Settings</span>
+        </a>
+
+        <a href="/logout" class="card logout">
+            <i class="fa-solid fa-right-from-bracket icon"></i>
+            <span>Logout</span>
+        </a>
+
+    </div>
+    <script>
+document.getElementById("dashboardImageLoader").addEventListener("change", function(e){
+
+    const file = e.target.files[0];
+
+    if(!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(event){
+
+        localStorage.setItem("importedImage", event.target.result);
+
+        window.location.href = "/draw?width=1000&height=600";
+
+    }
+
+    reader.readAsDataURL(file);
+
+});
+</script>
+
+</body>
+</html>

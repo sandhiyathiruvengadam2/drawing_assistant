@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register - SketchDraw</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #4B0082, #00BFFF);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 60px 50px;
+  border-radius: 25px;
+  width: 450px;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3), 0 0 40px rgba(75, 0, 130, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: slideInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.card h2 {
+  margin-bottom: 30px;
+  font-size: 36px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #4B0082, #00BFFF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+
+input {
+  width: 100%;
+  padding: 16px 18px;
+  margin: 12px 0;
+  border-radius: 14px;
+  border: 2px solid #e0e7ff;
+  box-sizing: border-box;
+  font-size: 18px;
+  font-family: 'Poppins', sans-serif;
+  background: #f8faff;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+input::placeholder {
+  color: #a0aec0;
+  font-weight: 500;
+  font-size: 17px;
+}
+
+input:focus {
+  outline: none;
+  border-color: #00BFFF;
+  background: white;
+  box-shadow: 0 0 25px rgba(0, 191, 255, 0.5), 0 0 50px rgba(75, 0, 130, 0.2), inset 0 0 10px rgba(0, 191, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+button {
+  width: 100%;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #4facfe, #00c6ff);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 18px;
+  margin-top: 20px;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  box-shadow: 0 10px 30px rgba(0, 198, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: left 0.5s ease;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 45px rgba(0, 198, 255, 0.5), 0 0 30px rgba(75, 0, 130, 0.3);
+}
+
+button:hover::before {
+    left: 100%;
+}
+
+button:active {
+  transform: translateY(-1px);
+}
+
+a {
+  display: block;
+  margin-top: 20px;
+  color: #2575fc;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  padding-bottom: 6px;
+}
+
+a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2.5px;
+    background: linear-gradient(90deg, #4B0082, #00BFFF);
+    border-radius: 2px;
+    transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+a:hover {
+  color: #4B0082;
+  text-shadow: 0 0 8px rgba(75, 0, 130, 0.3);
+}
+
+a:hover::after {
+    width: 100%;
+}
+</style>
+</head>
+
+<body>
+
+<form class="card" method="POST">
+
+  <h2>Create Account</h2>
+
+  <input type="text" name="username" placeholder="Username" required>
+  <input type="email" placeholder="Email" required>
+  <input type="password" placeholder="Password" required>
+  <input type="password" placeholder="Confirm Password" required>
+
+  <button type="submit">Register</button>
+
+  <a href="/login">Back to Login</a>
+
+</form>
+
+</body>
+</html>

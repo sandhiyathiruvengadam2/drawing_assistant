@@ -1,0 +1,147 @@
+body.canvas-page {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #e8f0ff, #f7faff);
+}
+
+.top-bar {
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.canvas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.canvas-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+
+    height: 240px;   /* 🔑 important – fixed height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.canvas-card:hover i {
+    transform: scale(1.1);
+}
+
+.canvas-card i {
+    font-size: 36px;
+    color: #4a6cf7;
+    margin-bottom: 10px;
+}
+.custom-size {
+    margin: 40px auto;
+    padding: 20px;
+    max-width: 400px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.custom-size input {
+    width: 45%;
+    padding: 10px;
+    margin: 10px 5px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.custom-size button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #4a6cf7;
+    color: white;
+    cursor: pointer;
+}
+.custom-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.custom-inputs input {
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+.custom-inputs button {
+    padding: 8px;
+    border-radius: 10px;
+    border: none;
+    background: #4a6cf7;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+.top-bar h1 {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.canvas-card h3 {
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+.top-bar {
+    position: relative;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.back-btn {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+
+    padding: 6px 10px;
+    border-radius: 8px;
+
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+
+    background: #ffffff;
+    color: #4a6cf7;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.back-btn:hover {
+    background: #f0f4ff;
+}
+
+U.grid-panel {
+    display: none;
+    margin: 10px auto;
+    padding: 10px 15px;
+    width: fit-content;
+
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+
+    font-size: 14px;
+}
+
+.grid-panel input {
+    width: 120px;
+}

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SketchDraw</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #4B0082, #00BFFF);
+  color: white;
+}
+
+/* NAVBAR */
+.navbar {
+  position: fixed;
+  top: 0;
+  left:0;
+  width: 100%;
+  background: linear-gradient(180deg, #1a1a2e 0%, #111 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 40px;
+  z-index: 1000;
+  box-sizing: border-box;
+  box-shadow: 0 4px 15px rgba(0, 191, 255, 0.1);
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 25px;   
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+/* 🔥 HOVER EFFECT */
+.nav-links a:hover {
+  color: #00BFFF;
+  transform: scale(1.05);
+  letter-spacing: 1px;
+  background: rgba(0, 191, 255, 0.1);
+}
+
+.nav-links a:last-child {
+  background: linear-gradient(135deg, #00BFFF, #00D4FF);
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(0, 191, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.nav-links a:last-child:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(0, 191, 255, 0.7);
+  animation: loginGlow 1.5s infinite;
+}
+
+@keyframes loginGlow {
+  0%, 100% { box-shadow: 0 8px 25px rgba(0, 191, 255, 0.7); }
+  50% { box-shadow: 0 12px 35px rgba(0, 191, 255, 1); }
+}
+
+
+/* HERO */
+.hero {
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 80px;
+}
+
+/* LOGO */
+.logo {
+  width: 500px;
+  margin-bottom: 20px;
+}
+/* LOGO TEXT */
+.logo-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+/* BIG TEXT */
+.hero h1 {
+  font-size: 70px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00BFFF 0%, #FFD700 50%, #FF1493 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: heroGlow 2.5s ease-in-out infinite, slideDown 0.8s ease-out;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 24px;
+  margin: 20px 0;
+  background: linear-gradient(90deg, #ffffff 0%, #87CEEB 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: heroGlow 3s ease-in-out infinite 0.2s, slideDown 1s ease-out 0.1s;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+/* ANIMATIONS */
+@keyframes popHover {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1.1); }
+}
+
+@keyframes heroGlow {
+  0%, 100% { text-shadow: 0 0 10px rgba(255,255,255,0.4), 0 0 20px rgba(0,191,255,0.3); }
+  50% { text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 30px rgba(0,191,255,0.6), 0 0 40px rgba(255,100,200,0.4); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 10px rgba(0, 191, 255, 0.5); }
+  50% { box-shadow: 0 0 25px rgba(0, 191, 255, 0.8); }
+  100% { box-shadow: 0 0 10px rgba(0, 191, 255, 0.5); }
+}
+
+@keyframes cardPopup {
+  0% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.05) translateY(-5px); }
+  100% { transform: scale(1.08) translateY(-10px); }
+}
+
+@keyframes cardGlow {
+  0% { box-shadow: 0 5px 20px rgba(0, 191, 255, 0.3); }
+  50% { box-shadow: 0 15px 40px rgba(0, 191, 255, 0.7); }
+  100% { box-shadow: 0 5px 20px rgba(0, 191, 255, 0.3); }
+}
+
+/* BUTTONS */
+.buttons {
+  margin-top: 30px;
+  display: flex;
+  gap: 20px;
+}
+
+.btn {
+  padding: 16px 40px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #00BFFF, #00D4FF);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: scale(1.12);
+  box-shadow: 0 8px 25px rgba(0, 191, 255, 0.6);
+  animation: glow 1.5s infinite;
+}
+
+.btn-secondary {
+  background: white;
+  color: #4B0082;
+  border: 2px solid white;
+}
+
+.btn-secondary:hover {
+  transform: scale(1.08);
+  background: #00BFFF;
+  color: white;
+  box-shadow: 0 8px 20px rgba(0, 191, 255, 0.5);
+}
+.login-btn {
+  background: #00BFFF;
+  padding: 8px 18px;
+  border-radius: 8px;
+  color: white;
+}
+
+/* FEATURES */
+.features {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 70px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #f0f0f5 100%);
+  color: black;
+  flex-wrap: wrap;
+}
+
+.card {
+  padding: 35px;
+  border-radius: 16px;
+  width: 250px;
+  text-align: center;
+  background: linear-gradient(135deg, #ffffff 0%, #f5f5ff 100%);
+  border: 2px solid transparent;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.card:nth-child(1) {
+  border-color: #FF6B6B;
+}
+
+.card:nth-child(1):hover {
+  background: linear-gradient(135deg, #FFE5E5 0%, #fff0f0 100%);
+  border-color: #FF6B6B;
+  animation: cardPopup 0.5s ease, cardGlow 1.5s ease infinite;
+  box-shadow: 0 0 30px rgba(255, 107, 107, 0.6);
+}
+
+.card:nth-child(2) {
+  border-color: #4ECDC4;
+}
+
+.card:nth-child(2):hover {
+  background: linear-gradient(135deg, #E0F7F6 0%, #f0fffe 100%);
+  border-color: #4ECDC4;
+  animation: cardPopup 0.5s ease, cardGlow 1.5s ease infinite;
+  box-shadow: 0 0 30px rgba(78, 205, 196, 0.6);
+}
+
+.card:nth-child(3) {
+  border-color: #FFD93D;
+}
+
+.card:nth-child(3):hover {
+  background: linear-gradient(135deg, #FFF8D6 0%, #fffef0 100%);
+  border-color: #FFD93D;
+  animation: cardPopup 0.5s ease, cardGlow 1.5s ease infinite;
+  box-shadow: 0 0 30px rgba(255, 217, 61, 0.6);
+}
+
+.card:nth-child(4) {
+  border-color: #A8E6CF;
+}
+
+.card:nth-child(4):hover {
+  background: linear-gradient(135deg, #E8F8F5 0%, #f5fffe 100%);
+  border-color: #A8E6CF;
+  animation: cardPopup 0.5s ease, cardGlow 1.5s ease infinite;
+  box-shadow: 0 0 30px rgba(168, 230, 207, 0.6);
+}
+
+.card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.card p {
+  font-size: 15px;
+  line-height: 1.6;
+  transition: all 0.3s ease;
+}
+
+@keyframes slideInUp {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInText {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* VALUE SECTION */
+.value-section {
+  text-align: center;
+  padding: 100px 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  color: white;
+  position: relative;
+  overflow: hidden;
+  animation: slideInUp 0.8s ease-out;
+}
+
+.value-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+@keyframes textGlow {
+  0%, 100% { text-shadow: 0 0 10px rgba(255,255,255,0.5), 0 0 20px rgba(255,200,255,0.3); }
+  50% { text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 30px rgba(255,100,255,0.6), 0 0 40px rgba(100,200,255,0.3); }
+}
+
+.value-section h2 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #ffffff;
+  animation: fadeInText 1s ease-out, textGlow 2s ease-in-out infinite;
+}
+
+.value-section p {
+  font-size: 22px;
+  max-width: 800px;
+  margin: auto;
+  line-height: 1.8;
+  font-weight: 300;
+  color: #ffffff;
+  animation: fadeInText 1.2s ease-out, textGlow 2.5s ease-in-out infinite 0.3s;
+  position: relative;
+  z-index: 1;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 60px;
+  background: #1e1e2f;
+}
+
+.footer h2 {
+  font-size: 32px;
+}
+
+.footer p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo-text"> SketchDraw</div>
+
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">Gallery</a>
+    <a href="#">Tutorials</a>
+    <a href="/login" class="login-btn">Login</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+
+  <img src="{{ url_for('static', filename='logo.png') }}" class="logo">
+
+  <h1>✨ Express Yourself Through Art</h1>
+
+  <p>Unleash Your Creativity with SketchDraw — Where Every Stroke Becomes Magic</p>
+
+  <div class="buttons">
+    <a href="/draw" class="btn btn-primary">🎨 Start Drawing Now</a>
+    <a href="/register" class="btn btn-secondary">Create Account</a>
+  </div>
+
+</div>
+
+<!-- FEATURES -->
+<div class="features">
+
+  <div class="card">
+    <h3>🎯 Intuitive & Smooth</h3>
+    <p>Clean interface with zero learning curve. Start creating in seconds.</p>
+  </div>
+
+  <div class="card">
+    <h3>🌍 Draw Anywhere</h3>
+    <p>Seamless experience across all your devices — desktop, tablet, mobile.</p>
+  </div>
+
+  <div class="card">
+    <h3>⚡ Powerful Tools</h3>
+    <p>Advanced brushes, shapes, layers, and effects right at your fingertips.</p>
+  </div>
+
+  <div class="card">
+    <h3>💾 Save & Share</h3>
+    <p>Store your masterpieces in the cloud and share your creativity instantly.</p>
+  </div>
+
+</div>
+
+<!-- VALUE -->
+<div class="value-section">
+
+  <h2>🚀 Why SketchDraw?</h2>
+
+  <p>
+    SketchDraw is your creative sanctuary. Born from passion, built for artists.
+    Whether you're a professional designer, digital artist, or just exploring your creativity,
+    we've crafted the perfect environment for your imagination to thrive.
+  </p>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+
+  <h2>Ready to bring your ideas to life?</h2>
+
+  <p>Join the SketchDraw community today.</p>
+
+  <a href="/login" class="btn btn-primary">Sign Up Free</a>
+
+</div>
+
+</body>
+</html>
